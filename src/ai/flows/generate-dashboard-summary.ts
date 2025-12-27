@@ -29,9 +29,6 @@ export const GenerateDashboardSummaryOutputSchema = z.object({
 });
 export type GenerateDashboardSummaryOutput = z.infer<typeof GenerateDashboardSummaryOutputSchema>;
 
-export async function generateDashboardSummary(input: GenerateDashboardSummaryInput): Promise<GenerateDashboardSummaryOutput> {
-  return generateDashboardSummaryFlow(input);
-}
 
 const prompt = ai.definePrompt({
   name: 'generateDashboardSummaryPrompt',
@@ -68,3 +65,7 @@ const generateDashboardSummaryFlow = ai.defineFlow(
     return output!;
   }
 );
+
+export async function generateDashboardSummary(input: GenerateDashboardSummaryInput): Promise<GenerateDashboardSummaryOutput> {
+  return generateDashboardSummaryFlow(input);
+}
