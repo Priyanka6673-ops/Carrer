@@ -9,7 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Loader2, Wand2, Target, Award, BarChart, Activity, TrendingUp, TrendingDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { PROFESSIONS } from '@/lib/constants';
-import { generateDashboardSummary, type GenerateDashboardSummaryOutput } from '@/ai/flows/generate-dashboard-summary';
+import { generateDashboardSummary } from '@/ai/flows/generate-dashboard-summary';
+import type { GenerateDashboardSummaryOutput } from '@/ai/flows/generate-dashboard-summary';
 
 async function generateDashboardAction(prevState: any, formData: FormData): Promise<{ result: GenerateDashboardSummaryOutput | null; error: string | null; }> {
     const resumeText = formData.get('resumeText') as string;

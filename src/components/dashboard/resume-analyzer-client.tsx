@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
@@ -9,8 +9,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Progress } from '@/components/ui/progress';
 import { Loader2, Wand2 } from 'lucide-react';
 import { skillGapIdentification } from '@/ai/flows/skill-gap-identification';
-import { analyzeResumeAts } from '@/ai/flows/resume-ats-analysis';
 import type { SkillGapIdentificationOutput } from '@/ai/flows/skill-gap-identification';
+import { analyzeResumeAts } from '@/ai/flows/resume-ats-analysis';
 import type { AnalyzeResumeAtsOutput } from '@/ai/flows/resume-ats-analysis';
 import { useToast } from '@/hooks/use-toast';
 

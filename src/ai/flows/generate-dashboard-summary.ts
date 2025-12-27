@@ -12,13 +12,13 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const GenerateDashboardSummaryInputSchema = z.object({
+const GenerateDashboardSummaryInputSchema = z.object({
   resumeText: z.string().describe('The full text content of the user\'s resume.'),
   profession: z.string().describe('The user\'s target job role (e.g., "Software Engineer").'),
 });
 export type GenerateDashboardSummaryInput = z.infer<typeof GenerateDashboardSummaryInputSchema>;
 
-export const GenerateDashboardSummaryOutputSchema = z.object({
+const GenerateDashboardSummaryOutputSchema = z.object({
   targetRole: z.string().describe("The user's target role, as provided in the input."),
   readinessScore: z.number().int().min(0).max(100).describe('An overall "job readiness" score from 0-100, calculated based on skill alignment and estimated experience.'),
   skillsCoverage: z.number().int().min(0).max(100).describe('The percentage of required skills for the target role that are present in the resume.'),

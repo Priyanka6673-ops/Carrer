@@ -26,10 +26,6 @@ const SkillGapIdentificationOutputSchema = z.object({
 });
 export type SkillGapIdentificationOutput = z.infer<typeof SkillGapIdentificationOutputSchema>;
 
-export async function skillGapIdentification(input: SkillGapIdentificationInput): Promise<SkillGapIdentificationOutput> {
-  return skillGapIdentificationFlow(input);
-}
-
 const prompt = ai.definePrompt({
   name: 'skillGapIdentificationPrompt',
   input: {schema: SkillGapIdentificationInputSchema},
@@ -62,3 +58,7 @@ const skillGapIdentificationFlow = ai.defineFlow(
     return output!;
   }
 );
+
+export async function skillGapIdentification(input: SkillGapIdentificationInput): Promise<SkillGapIdentificationOutput> {
+  return skillGapIdentificationFlow(input);
+}

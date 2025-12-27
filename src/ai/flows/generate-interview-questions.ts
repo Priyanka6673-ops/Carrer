@@ -27,10 +27,6 @@ const GenerateInterviewQuestionsOutputSchema = z.object({
 });
 export type GenerateInterviewQuestionsOutput = z.infer<typeof GenerateInterviewQuestionsOutputSchema>;
 
-export async function generateInterviewQuestions(input: GenerateInterviewQuestionsInput): Promise<GenerateInterviewQuestionsOutput> {
-  return generateInterviewQuestionsFlow(input);
-}
-
 const prompt = ai.definePrompt({
   name: 'generateInterviewQuestionsPrompt',
   input: {schema: GenerateInterviewQuestionsInputSchema},
@@ -85,3 +81,7 @@ const generateInterviewQuestionsFlow = ai.defineFlow(
     return output!;
   }
 );
+
+export async function generateInterviewQuestions(input: GenerateInterviewQuestionsInput): Promise<GenerateInterviewQuestionsOutput> {
+  return generateInterviewQuestionsFlow(input);
+}

@@ -25,10 +25,6 @@ const MockInterviewFeedbackOutputSchema = z.object({
 });
 export type MockInterviewFeedbackOutput = z.infer<typeof MockInterviewFeedbackOutputSchema>;
 
-export async function mockInterviewFeedback(input: MockInterviewFeedbackInput): Promise<MockInterviewFeedbackOutput> {
-  return mockInterviewFeedbackFlow(input);
-}
-
 const prompt = ai.definePrompt({
   name: 'mockInterviewFeedbackPrompt',
   input: {schema: MockInterviewFeedbackInputSchema},
@@ -64,3 +60,7 @@ const mockInterviewFeedbackFlow = ai.defineFlow(
     return output!;
   }
 );
+
+export async function mockInterviewFeedback(input: MockInterviewFeedbackInput): Promise<MockInterviewFeedbackOutput> {
+  return mockInterviewFeedbackFlow(input);
+}

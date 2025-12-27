@@ -28,10 +28,6 @@ const AnalyzeResumeAtsOutputSchema = z.object({
 });
 export type AnalyzeResumeAtsOutput = z.infer<typeof AnalyzeResumeAtsOutputSchema>;
 
-export async function analyzeResumeAts(input: AnalyzeResumeAtsInput): Promise<AnalyzeResumeAtsOutput> {
-  return analyzeResumeAtsFlow(input);
-}
-
 const analyzeResumeAtsPrompt = ai.definePrompt({
   name: 'analyzeResumeAtsPrompt',
   input: {schema: AnalyzeResumeAtsInputSchema},
@@ -60,3 +56,7 @@ const analyzeResumeAtsFlow = ai.defineFlow(
     return output!;
   }
 );
+
+export async function analyzeResumeAts(input: AnalyzeResumeAtsInput): Promise<AnalyzeResumeAtsOutput> {
+  return analyzeResumeAtsFlow(input);
+}
