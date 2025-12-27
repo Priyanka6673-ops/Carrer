@@ -1,7 +1,6 @@
 'use client';
 
-import { useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
+import { useActionState, useFormStatus } from 'react-dom';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -140,6 +139,7 @@ export function ResumeAnalyzerClient() {
                                 />
                             </TabsContent>
                             <TabsContent value="upload">
+                                <input type="hidden" name="resumeText" value={resumeText} />
                                 <div className="mt-4 flex justify-center rounded-lg border border-dashed border-input px-6 py-10">
                                     <div className="text-center">
                                         <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
