@@ -14,6 +14,7 @@ import {
   CalendarDays,
   Code,
   GitCompareArrows,
+  Map,
 } from "lucide-react";
 
 const navItems = [
@@ -23,6 +24,7 @@ const navItems = [
   { href: "/dashboard/tech-questions", label: "Tech Questions", icon: Code },
   { href: "/dashboard/job-matcher", label: "Job Matcher", icon: GitCompareArrows },
   { href: "/dashboard/mock-interview", label: "Mock Interview", icon: MessageSquare },
+  { href: "/dashboard/roadmaps", label: "Roadmaps", icon: Map },
   { href: "/dashboard/profile", label: "Profile", icon: User },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
