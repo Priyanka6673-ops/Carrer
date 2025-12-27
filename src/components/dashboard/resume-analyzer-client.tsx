@@ -21,6 +21,7 @@ import { useUser, useFirestore } from '@/firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
+import ReactMarkdown from 'react-markdown';
 
 // Required for pdfjs-dist to work
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -163,6 +164,7 @@ export function ResumeAnalyzerClient() {
                                 <TabsTrigger value="upload">Upload PDF</TabsTrigger>
                             </TabsList>
                             <TabsContent value="paste">
+                                <input type="hidden" name="resumeText" value={resumeText} />
                                 <Textarea
                                     name="resumeText"
                                     placeholder="Paste the full text of your resume here..."
@@ -216,8 +218,8 @@ export function ResumeAnalyzerClient() {
                                 <AccordionItem value="item-1">
                                     <AccordionTrigger>Improvement Suggestions</AccordionTrigger>
                                     <AccordionContent>
-                                        <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap">
-                                            {state.result.ats.improvementSuggestions}
+                                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                                            <ReactMarkdown>{state.result.ats.improvementSuggestions}</ReactMarkdown>
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>
@@ -246,8 +248,8 @@ export function ResumeAnalyzerClient() {
                                 <AccordionItem value="item-2">
                                     <AccordionTrigger>4-Week Learning Plan</AccordionTrigger>
                                     <AccordionContent>
-                                        <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap">
-                                            {state.result.skills.learningPlan}
+                                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                                            <ReactMarkdown>{state.result.skills.learningPlan}</ReactMarkdown>
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>
@@ -259,4 +261,3 @@ export function ResumeAnalyzerClient() {
         </div>
     );
 }
-    

@@ -30,6 +30,7 @@ import { useUser, useFirestore } from '@/firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
+import ReactMarkdown from 'react-markdown';
 
 
 // Required for pdfjs-dist to work
@@ -370,8 +371,8 @@ export function MockInterviewClient() {
                                  <AccordionContent className="space-y-4">
                                       <p className="font-semibold text-muted-foreground">"{fb.question}"</p>
                                      <h4 className="font-semibold">Feedback:</h4>
-                                     <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap rounded-md border bg-secondary/50 p-4">
-                                        {fb.feedback}
+                                     <div className="prose prose-sm dark:prose-invert max-w-none rounded-md border bg-secondary/50 p-4">
+                                        <ReactMarkdown>{fb.feedback}</ReactMarkdown>
                                      </div>
                                  </AccordionContent>
                              </AccordionItem>
@@ -472,8 +473,8 @@ export function MockInterviewClient() {
                                 </div>
                                 <div>
                                     <h4 className="font-semibold mb-2">Constructive Feedback:</h4>
-                                    <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap rounded-md border bg-secondary/50 p-4">
-                                        {currentFeedback.feedback}
+                                    <div className="prose prose-sm dark:prose-invert max-w-none rounded-md border bg-secondary/50 p-4">
+                                        <ReactMarkdown>{currentFeedback.feedback}</ReactMarkdown>
                                     </div>
                                 </div>
                             </div>
@@ -492,4 +493,3 @@ export function MockInterviewClient() {
         </div>
     );
 }
-    

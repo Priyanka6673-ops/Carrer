@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import * as pdfjs from 'pdfjs-dist/build/pdf';
+import ReactMarkdown from 'react-markdown';
 
 // Required for pdfjs-dist to work
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -208,8 +209,8 @@ export function StudyPlanClient() {
                         </div>
                     </CardHeader>
                     <CardContent>
-                         <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap rounded-md border bg-secondary/10 p-4">
-                            {state.result.studyPlan}
+                         <div className="prose prose-sm dark:prose-invert max-w-none rounded-md border bg-secondary/10 p-4">
+                            <ReactMarkdown>{state.result.studyPlan}</ReactMarkdown>
                         </div>
                     </CardContent>
                 </Card>
