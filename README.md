@@ -86,3 +86,34 @@ server {
 }
 ```
 This configuration forwards all traffic from port 80 to your Next.js application running on port 3000. Remember to set up your domain and enable HTTPS with a tool like Certbot.
+
+## Deployment with Docker
+
+Containerizing your application is a great way to ensure consistent environments and simplify deployment.
+
+### 1. Prerequisites
+
+- **Docker**: Ensure Docker is installed on your machine.
+
+### 2. Build the Docker Image
+
+A `Dockerfile` is included in the project. It uses a multi-stage build to create a small, optimized production image.
+
+To build the image, run the following command in your project's root directory:
+```bash
+docker build -t careercraft-ai .
+```
+This will create a Docker image named `careercraft-ai`.
+
+### 3. Run the Docker Container
+
+Once the image is built, you can run it as a container. The Next.js application inside the container runs on port 3000. You need to map a port on your host machine to the container's port 3000.
+
+To run the container, use this command:
+```bash
+docker run -p 3000:3000 careercraft-ai
+```
+- `-p 3000:3000` maps port 3000 on your host to port 3000 in the container.
+- `careercraft-ai` is the name of the image you built.
+
+Your application is now running inside a Docker container and is accessible at `http://localhost:3000`. To run it in detached mode (in the background), add the `-d` flag: `docker run -d -p 3000:3000 careercraft-ai`.
