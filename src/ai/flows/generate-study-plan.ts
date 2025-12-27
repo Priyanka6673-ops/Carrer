@@ -11,14 +11,14 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const GenerateStudyPlanInputSchema = z.object({
+const GenerateStudyPlanInputSchema = z.object({
   resumeText: z.string().describe("The full text content of the user's resume."),
   jobDescription: z.string().describe("The full text of the target job description."),
   days: z.number().int().positive().describe("The number of days the user has to prepare."),
 });
 export type GenerateStudyPlanInput = z.infer<typeof GenerateStudyPlanInputSchema>;
 
-export const GenerateStudyPlanOutputSchema = z.object({
+const GenerateStudyPlanOutputSchema = z.object({
   studyPlan: z.string().describe("A detailed, day-by-day study plan in Markdown format. The plan should identify key skill gaps between the resume and the job description and provide a structured learning path with links to high-quality online resources."),
   suggestedProfession: z.string().describe("The job title extracted or inferred from the job description, which can be used for a mock interview (e.g., 'Senior DevOps Engineer')."),
 });
