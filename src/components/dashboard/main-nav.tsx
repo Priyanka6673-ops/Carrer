@@ -9,12 +9,16 @@ import {
   LayoutDashboard,
   FileText,
   MessageSquare,
+  User,
+  Settings,
 } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/resume-analyzer", label: "Resume Analyzer", icon: FileText },
   { href: "/dashboard/mock-interview", label: "Mock Interview", icon: MessageSquare },
+  { href: "/dashboard/profile", label: "Profile", icon: User },
+  { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
 export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
