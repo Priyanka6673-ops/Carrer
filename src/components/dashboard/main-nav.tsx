@@ -13,14 +13,16 @@ import {
   Settings,
   CalendarDays,
   Code,
+  GitCompareArrows,
 } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/resume-analyzer", label: "Resume Analyzer", icon: FileText },
-  { href: "/dashboard/mock-interview", label: "Mock Interview", icon: MessageSquare },
   { href: "/dashboard/study-plan", label: "Study Plan", icon: CalendarDays },
   { href: "/dashboard/tech-questions", label: "Tech Questions", icon: Code },
+  { href: "/dashboard/job-matcher", label: "Job Matcher", icon: GitCompareArrows },
+  { href: "/dashboard/mock-interview", label: "Mock Interview", icon: MessageSquare },
   { href: "/dashboard/profile", label: "Profile", icon: User },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];

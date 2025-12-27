@@ -6,3 +6,4 @@ import '@/ai/flows/generate-interview-questions.ts';
 import '@/ai/flows/mock-interview-feedback.ts';
 import '@/ai/flows/generate-study-plan.ts';
 import '@/ai/flows/generate-tech-questions.ts';
+import '@/ai/flows/job-matcher-analysis.ts';
