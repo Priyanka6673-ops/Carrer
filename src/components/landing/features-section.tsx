@@ -30,18 +30,51 @@ const features: FeatureProps[] = [
   },
 ];
 
+const HowItWorks = () => (
+  <section id="how-it-works" className="container py-24 sm:py-32 space-y-16 text-center">
+    <h2 className="text-3xl lg:text-4xl font-bold">
+      How It Works in 3 Simple Steps
+    </h2>
+    <div className="grid md:grid-cols-3 gap-8">
+      <Card className="bg-card/50 border-primary/20 transform hover:-translate-y-2 transition-transform duration-300">
+        <CardHeader>
+          <div className="text-4xl font-bold text-primary mb-4">1</div>
+          <CardTitle>Upload Your Resume</CardTitle>
+          <CardDescription>Provide your resume to give our AI context about your skills and experience.</CardDescription>
+        </CardHeader>
+      </Card>
+      <Card className="bg-card/50 border-primary/20 transform hover:-translate-y-2 transition-transform duration-300">
+        <CardHeader>
+          <div className="text-4xl font-bold text-primary mb-4">2</div>
+          <CardTitle>Select a Role</CardTitle>
+          <CardDescription>Choose your target profession to get tailored questions and analysis.</CardDescription>
+        </CardHeader>
+      </Card>
+      <Card className="bg-card/50 border-primary/20 transform hover:-translate-y-2 transition-transform duration-300">
+        <CardHeader>
+          <div className="text-4xl font-bold text-primary mb-4">3</div>
+          <CardTitle>Start Practicing</CardTitle>
+          <CardDescription>Engage in mock interviews and get instant, actionable feedback to improve.</CardDescription>
+        </CardHeader>
+      </Card>
+    </div>
+  </section>
+);
+
+
 export const FeaturesSection = () => {
   return (
+    <>
     <section id="features" className="container py-24 sm:py-32 space-y-8">
       <h2 className="text-3xl lg:text-4xl font-bold md:text-center">
         Many{' '}
-        <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+        <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
           Great Features
         </span>
       </h2>
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
         {features.map(({ icon, title, description }) => (
-          <Card key={title} className="bg-card/50">
+          <Card key={title} className="bg-card/50 backdrop-blur-sm border-white/10 transition-all duration-300 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10">
             <CardHeader>
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary mb-4">
                 {icon}
@@ -53,5 +86,7 @@ export const FeaturesSection = () => {
         ))}
       </div>
     </section>
+    <HowItWorks />
+    </>
   );
 };
