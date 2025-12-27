@@ -1,7 +1,6 @@
 'use client';
 
-import { useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
+import { useActionState, useFormStatus } from 'react-dom';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -64,15 +63,13 @@ export function ResumeAnalyzerClient() {
     const [resumeText, setResumeText] = useState('');
     const [fileName, setFileName] = useState('');
 
-    useEffect(() => {
-        if (state.error) {
-            toast({
-              variant: "destructive",
-              title: "Analysis Failed",
-              description: state.error,
-            });
-        }
-    }, [state.error, toast]);
+    if (state.error) {
+        toast({
+          variant: "destructive",
+          title: "Analysis Failed",
+          description: state.error,
+        });
+    }
 
     const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];

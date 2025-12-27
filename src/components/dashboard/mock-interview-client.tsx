@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useEffect } from 'react';
+import { useState, useTransition, useEffect, ChangeEvent } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -19,13 +19,17 @@ import { generateInterviewQuestions } from '@/ai/flows/generate-interview-questi
 import type { GenerateInterviewQuestionsOutput } from '@/ai/flows/generate-interview-questions';
 import { mockInterviewFeedback } from '@/ai/flows/mock-interview-feedback';
 import type { MockInterviewFeedbackOutput } from '@/ai/flows/mock-interview-feedback';
-import { Loader2, Mic, Sparkles, Star, ChevronLeft, ChevronRight, Check, MicOff } from 'lucide-react';
+import { Loader2, Mic, Sparkles, Star, ChevronLeft, ChevronRight, Check, MicOff, Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { useSpeechToText } from '@/hooks/use-speech-to-text';
-import { Switch } from '@/components/ui/switch';
-import { useUser, useFirestore } from '@/firebase';
-import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import * as pdfjs from 'pdfjs-dist/build/pdf';
+
+// Required for pdfjs-dist to work
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
 
 type InterviewQuestion = GenerateInterviewQuestionsOutput['questions'][0];
 type InterviewState = 'idle' | 'generating_questions' | 'ready_to_start' | 'in_progress' | 'getting_feedback' | 'feedback_ready' | 'completed';
@@ -34,15 +38,12 @@ type InterviewType = 'text' | 'voice';
 export function MockInterviewClient() {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
-    const { user } = useUser();
-    const firestore = useFirestore();
     
     // Setup State
     const [profession, setProfession] = useState<string>('');
     const [interviewType, setInterviewType] = useState<InterviewType>('text');
-    const [isResumeBased, setIsResumeBased] = useState(false);
-    const [latestResumeText, setLatestResumeText] = useState<string | null>(null);
-    const [isFetchingResume, setIsFetchingResume] = useState(false);
+    const [resumeText, setResumeText] = useState<string>('');
+    const [fileName, setFileName] = useState('');
     
     // Interview State
     const [interviewState, setInterviewState] = useState<InterviewState>('idle');
@@ -70,36 +71,47 @@ export function MockInterviewClient() {
         }
     }, [transcript]);
 
-    const fetchLatestResume = async () => {
-        if (!user || !firestore) return;
-        setIsFetchingResume(true);
-        try {
-            const analysesRef = collection(firestore, `users/${user.uid}/resumeAnalyses`);
-            const q = query(analysesRef, orderBy('analysisDate', 'desc'), limit(1));
-            const querySnapshot = await getDocs(q);
-            if (!querySnapshot.empty) {
-                const latestAnalysis = querySnapshot.docs[0].data();
-                setLatestResumeText(latestAnalysis.resumeText);
-                toast({ title: 'Resume loaded', description: 'Your latest resume has been loaded for the interview.' });
-            } else {
-                toast({ title: 'No resume found', description: 'Please analyze a resume first to use this feature.', variant: 'destructive' });
-                setIsResumeBased(false);
-            }
-        } catch (error) {
-            console.error("Error fetching resume:", error);
-            toast({ title: 'Error fetching resume', description: 'Could not load your latest resume.', variant: 'destructive' });
-            setIsResumeBased(false);
-        } finally {
-            setIsFetchingResume(false);
-        }
-    };
+    const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
 
-    useEffect(() => {
-        if (isResumeBased && !latestResumeText) {
-            fetchLatestResume();
+        if (file.type !== 'application/pdf') {
+            toast({
+                title: 'Invalid File Type',
+                description: 'Please upload a PDF file.',
+                variant: 'destructive',
+            });
+            return;
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isResumeBased]);
+
+        setFileName(file.name);
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            const typedArray = new Uint8Array(event.target?.result as ArrayBuffer);
+            try {
+                const pdf = await pdfjs.getDocument(typedArray).promise;
+                let text = '';
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const content = await page.getTextContent();
+                    text += content.items.map(item => ('str' in item ? item.str : '')).join(' ');
+                }
+                setResumeText(text);
+                toast({
+                    title: 'Success',
+                    description: 'PDF parsed successfully. Questions will be based on this resume.',
+                });
+            } catch (error) {
+                console.error('Failed to parse PDF:', error);
+                toast({
+                    title: 'PDF Parsing Error',
+                    description: 'Could not read text from the PDF. Please try pasting the text manually.',
+                    variant: 'destructive',
+                });
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    };
 
 
     const handleGenerateQuestions = () => {
@@ -107,10 +119,7 @@ export function MockInterviewClient() {
             toast({ title: 'Please select a profession first.', variant: 'destructive' });
             return;
         }
-        if (isResumeBased && !latestResumeText) {
-            toast({ title: 'Resume not loaded yet.', description: 'Please wait for your resume to be loaded or disable the resume-based option.', variant: 'destructive' });
-            return;
-        }
+        
         setInterviewState('generating_questions');
         setQuestions([]);
         setAllFeedback([]);
@@ -120,7 +129,7 @@ export function MockInterviewClient() {
             try {
                 const result = await generateInterviewQuestions({ 
                     profession,
-                    resumeText: isResumeBased ? latestResumeText : undefined
+                    resumeText: resumeText || undefined
                 });
                 setQuestions(result.questions);
                 setInterviewState('ready_to_start');
@@ -191,8 +200,8 @@ export function MockInterviewClient() {
         setAllFeedback([]);
         setCurrentQuestionIndex(0);
         setCurrentFeedback(null);
-        setIsResumeBased(false);
-        setLatestResumeText(null);
+        setResumeText('');
+        setFileName('');
     }
 
     const renderStars = (score: number) => {
@@ -232,11 +241,44 @@ export function MockInterviewClient() {
                             </Label>
                         </RadioGroup>
                     </div>
-                    <div className="flex items-center space-x-2">
-                        <Switch id="resume-based" checked={isResumeBased} onCheckedChange={setIsResumeBased} disabled={isFetchingResume} />
-                        <Label htmlFor="resume-based" className='cursor-pointer'>Generate questions based on my resume</Label>
-                        {isFetchingResume && <Loader2 className="h-4 w-4 animate-spin" />}
+                    <div className="space-y-2">
+                         <Label>3. Tailor Questions (Optional)</Label>
+                         <Tabs defaultValue="paste" className="w-full">
+                            <TabsList className="grid w-full grid-cols-2">
+                                <TabsTrigger value="paste">Paste Resume</TabsTrigger>
+                                <TabsTrigger value="upload">Upload PDF</TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="paste" className="mt-4">
+                                <Textarea
+                                    name="resumeText"
+                                    placeholder="Paste your resume here to get tailored questions..."
+                                    className="min-h-[150px]"
+                                    value={resumeText}
+                                    onChange={(e) => setResumeText(e.target.value)}
+                                />
+                            </TabsContent>
+                            <TabsContent value="upload" className="mt-4">
+                                <div className="flex justify-center rounded-lg border border-dashed border-input px-6 py-10">
+                                    <div className="text-center">
+                                        <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
+                                        <div className="mt-4 flex text-sm leading-6 text-muted-foreground">
+                                            <Label
+                                                htmlFor="file-upload"
+                                                className="relative cursor-pointer rounded-md font-semibold text-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 hover:text-primary/80"
+                                            >
+                                                <span>Upload a file</span>
+                                                <Input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} accept=".pdf"/>
+                                            </Label>
+                                            <p className="pl-1">or drag and drop</p>
+                                        </div>
+                                        <p className="text-xs leading-5 text-muted-foreground">PDF up to 10MB</p>
+                                        {fileName && <p className="text-sm mt-4 text-foreground">File: {fileName}</p>}
+                                    </div>
+                                </div>
+                            </TabsContent>
+                        </Tabs>
                     </div>
+
                     <Button onClick={handleGenerateQuestions} disabled={!profession || interviewState === 'generating_questions'} className="w-full">
                         {interviewState === 'generating_questions' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
                         Generate Questions
@@ -255,6 +297,7 @@ export function MockInterviewClient() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <p className="text-lg font-semibold">{questions.length} questions have been generated for you.</p>
+                    {resumeText && <p className="text-sm text-muted-foreground">The questions have been tailored based on the resume you provided.</p>}
                      <p className="text-muted-foreground">When you're ready, start the interview. Good luck!</p>
                     <Button onClick={startInterview} size="lg">Start Interview</Button>
                 </CardContent>
