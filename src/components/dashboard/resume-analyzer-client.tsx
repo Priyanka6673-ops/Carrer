@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useFormStatus } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -51,7 +50,7 @@ function SubmitButton() {
 
 export function ResumeAnalyzerClient() {
     const { toast } = useToast();
-    const [state, formAction] = useFormState(analyzeResumeAction, { result: null, error: null });
+    const [state, formAction] = useActionState(analyzeResumeAction, { result: null, error: null });
     
     if (state.error) {
         toast({
