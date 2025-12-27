@@ -13,6 +13,7 @@ To deploy this application on your own Virtual Machine (VM), follow these steps.
 Ensure your VM has the following installed:
 - **Node.js**: Version 20.x or later.
 - **npm** (or yarn/pnpm).
+- **Firebase CLI**: `npm install -g firebase-tools`
 
 ### 2. Clone the Repository
 
@@ -29,11 +30,16 @@ Install the necessary Node.js packages.
 npm install
 ```
 
-### 4. Set Up Environment Variables
+### 4. Set Up Environment Variables & Database
 
 This project requires your Firebase project configuration to run. The configuration is stored in `src/firebase/config.ts`. Ensure this file contains the correct configuration for your Firebase project. For production, it's recommended to use environment variables, but the current setup will work by using this config file as a fallback.
 
-**Important**: Your `firestore.rules` are critical for securing your database. Ensure they are deployed to your Firebase project. You can do this using the Firebase CLI (`firebase deploy --only firestore:rules`).
+**Important: Secure Your Database**
+Your `firestore.rules` file defines the security for your database. You MUST deploy these rules to your Firebase project to protect your data.
+
+1.  Log in to Firebase: `firebase login`
+2.  Select your Firebase project: `firebase use <your-firebase-project-id>`
+3.  Deploy the rules: `firebase deploy --only firestore:rules`
 
 ### 5. Build the Application
 
@@ -117,3 +123,5 @@ docker run -p 3000:3000 careercraft-ai
 - `careercraft-ai` is the name of the image you built.
 
 Your application is now running inside a Docker container and is accessible at `http://localhost:3000`. To run it in detached mode (in the background), add the `-d` flag: `docker run -d -p 3000:3000 careercraft-ai`.
+
+**Note on Database:** Even when using Docker, your application connects to the cloud-hosted Firebase Firestore. You still need to deploy your `firestore.rules` to your Firebase project as described in the VM deployment section.
