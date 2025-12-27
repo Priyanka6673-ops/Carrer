@@ -21,8 +21,10 @@ export async function login(prevState: any, formData: FormData) {
   
   // Simulate database check and JWT creation
   console.log('User logged in:', parsed.data);
+  const name = parsed.data.email.split('@')[0]; // Simulate getting name from DB
+  const email = parsed.data.email;
   
-  redirect('/dashboard');
+  redirect(`/dashboard?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`);
 }
 
 
@@ -42,6 +44,7 @@ export async function signup(prevState: any, formData: FormData) {
 
   // Simulate user creation in the database
   console.log('User signed up:', parsed.data);
+  const { name, email } = parsed.data;
   
-  redirect('/dashboard');
+  redirect(`/dashboard?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`);
 }

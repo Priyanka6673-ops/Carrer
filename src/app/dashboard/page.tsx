@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/card";
 import { OverviewChart } from "@/components/dashboard/overview-chart";
 import { RecentAnalyses } from "@/components/dashboard/recent-analyses";
-import { PageHeader } from "@/components/page-header";
 import {
   Activity,
   Award,
@@ -19,27 +18,28 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PROFESSIONS } from "@/lib/constants";
 
-export default function DashboardPage() {
-  const user = {
-    name: "Priyanka Pawar",
-    email: "priyanka@example.com",
-    role: "Software Engineer",
-  };
+export default function DashboardPage({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+  const userName = searchParams?.name as string || 'there';
+  const userRole = 'Software Engineer'; // This will be dynamic later
 
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Welcome back, {user.name.split(" ")[0]} 👋
+            Welcome back, {userName.split(" ")[0]} 👋
           </h1>
           <p className="text-muted-foreground">
             Here's a snapshot of your career prep progress for{" "}
-            <span className="font-semibold text-primary">{user.role}</span>.
+            <span className="font-semibold text-primary">{userRole}</span>.
           </p>
         </div>
         <div className="w-full sm:w-auto">
-            <Select defaultValue={user.role}>
+            <Select defaultValue={userRole}>
                 <SelectTrigger className="w-full sm:w-[200px]">
                     <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
