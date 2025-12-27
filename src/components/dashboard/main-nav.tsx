@@ -12,6 +12,7 @@ import {
   User,
   Settings,
   CalendarDays,
+  Code,
 } from "lucide-react";
 
 const navItems = [
@@ -19,6 +20,7 @@ const navItems = [
   { href: "/dashboard/resume-analyzer", label: "Resume Analyzer", icon: FileText },
   { href: "/dashboard/mock-interview", label: "Mock Interview", icon: MessageSquare },
   { href: "/dashboard/study-plan", label: "Study Plan", icon: CalendarDays },
+  { href: "/dashboard/tech-questions", label: "Tech Questions", icon: Code },
   { href: "/dashboard/profile", label: "Profile", icon: User },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
